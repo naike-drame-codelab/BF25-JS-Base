@@ -93,3 +93,16 @@ v7.Miauler(); // MIAOU!!!
 // NaN - Not a Number
 console.log(42 / "Khun"); // NaN
 console.log(typeof (42 / "Khun")); // number
+
+// comparer des chaînes de caractères
+"a" < "b"; // true
+"a" < "B"; // false
+"a".localeCompare("b"); // -1 ici (valeurs possibles : -1, 0, 1)
+
+"12".padStart(3, "0"); // 012
+
+"ici".replace("i", "p"); // pci
+"ici".replace(/i/g, "p"); // pcp
+"ici".replaceAll("i", "p"); // pcp
+
+"11,12,13,14,15".split(","); // ['11','12','13','14','15']
