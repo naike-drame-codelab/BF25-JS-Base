@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Convertisseur euro / yen, dollar, rouble</title>
+  </head>
+  <body>
+    <div>
+      <label for="euroInput"></label>
+      <input
+        id="euroInput"
+        type="number"
+        placeholder="Veuillez entrer un montant en euro"
+      />
+    </div>
+    <button id="calculateButton">Calculer</button>
+    <hr />
+    <div>
+      <div id="resultInYen"></div>
+      <br />
+      <div id="resultInDollar"></div>
+      <br />
+      <div id="resultInRouble"></div>
+    </div>
+    <script src="./convert.js"></script>
+  </body>
+</html>
