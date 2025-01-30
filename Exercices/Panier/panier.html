@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panier</title>
+    <link rel="stylesheet" href="./panier.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Panier</h1>
+    </header>
+
+    <main>
+      <section class="add-new-item">
+        <h2>Ajouter</h2>
+
+        <form id="new-item-form">
+          <input
+            type="text"
+            id="new-item-input"
+            placeholder="Ajouter un article"
+          />
+          <p>Important</p>
+          <input type="checkbox" name="check-important" id="" />
+          <br />
+          <input type="submit" value="+" id="new-item-submit" />
+        </form>
+      </section>
+
+      <section class="items-list">
+        <h2>Votre panier</h2>
+
+        <div id="items">
+          <!-- <div class="item">
+            <div class="content">
+              <input type="text" class="text" value="My item" readonly />
+            </div>
+            <div class="actions">
+              <button class="delete">-</button>
+            </div>
+          </div> -->
+        </div>
+      </section>
+    </main>
+
+    <script src="./panier.js"></script>
+  </body>
+</html>
