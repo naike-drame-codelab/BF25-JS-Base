@@ -197,11 +197,16 @@ const DOM = {
   table: {
     articles: {
       tbody: document.querySelector("#articles-table > tbody"),
+      sortHeaders: document.querySelectorAll("[data-sortfield]"),
     },
   },
 };
 
 // VARIABLES
+const sort = {
+  sortField: null,
+  sortOrder: 1, // -1 DESC 1 ASC
+};
 let articlesToDisplay;
 
 // EVENTS
@@ -236,6 +241,41 @@ DOM.buttons.search.addEventListener("click", () => {
         (!max || d.prix <= max)
     );
 
+  // afficher les articles
+  displayArticles();
+});
+
+for (let th of DOM.table.articles.sortHeaders) {
+  th.addEventListener("click", () => {
+    sort.sortOrder =
+      sort.sortField !== th.dataset.sortfield
+        ? sort.sortOrder
+        : sort.sortOrder * -1;
+    sort.sortField = th.dataset.sortfield;
+    console.log(sort);
+    // trier
+    if (!articlesToDisplay?.length) return;
+
+    const type = typeof articlesToDisplay[0][sort.sortField];
+
+    articlesToDisplay = articlesToDisplay.toSorted((a, b) => {
+      switch (type) {
+        case "number":
+          return (a[sort.sortField] - b[sort.sortField]) * sort.sortOrder;
+        case "string":
+          return (
+            a[sort.sortField].localeCompare(b[sort.sortField]) * sort.sortOrder
+          );
+      }
+    });
+
+    // afficher les articles
+    displayArticles();
+  });
+}
+
+// FONCTIONS
+const displayArticles = () => {
   // vider la table des articles
   DOM.table.articles.tbody.replaceChildren();
 
@@ -251,4 +291,4 @@ DOM.buttons.search.addEventListener("click", () => {
     tdDescription.textContent = article.description;
     tdPrix.textContent = article.prix + "€";
   }
-});
+};
