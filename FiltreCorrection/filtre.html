@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filtrer des produits</title>
+    <link rel="stylesheet" href="./filtre.css" />
+  </head>
+  <body>
+    <div id="form">
+      <div>
+        <label for="search-input">Search</label
+        ><input type="text" id="search-input" />
+      </div>
+      <div>
+        <label for="min-input">Min</label><input type="text" id="min-input" />
+      </div>
+      <div>
+        <label for="max-input">Max</label><input type="text" id="max-input" />
+      </div>
+      <div><button id="search-button">Rechercher</button></div>
+    </div>
+
+    <table id="articles-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Description</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="./filtre.js"></script>
+  </body>
+</html>

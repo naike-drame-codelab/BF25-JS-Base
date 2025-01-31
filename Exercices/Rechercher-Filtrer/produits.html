@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rechercher & Filtrer</title>
+  </head>
+  <body>
+    <form id="search-form">
+      <label for="input-name">Rechercher</label>
+      <input
+        id="input-name"
+        type="text"
+        placeholder="Rechercher un produit..."
+      />
+      <label for="input-min">Min.</label>
+      <input type="number" id="input-min" />
+      <label for="input-max">Max.</label>
+      <input type="number" id="input-max" />
+      <button type="submit">Fitrer</button>
+    </form>
+    <hr />
+    <div>
+      <table id="table-products">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>
+              Prix
+              <button
+                style="display: inline; color: rgb(27, 194, 172)"
+                class="sort-toggle"
+              >
+                ⇅
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="./produits.js"></script>
+  </body>
+</html>
