@@ -45,7 +45,9 @@ DOM.buttons.search.addEventListener("click", ({ currentTarget }) => {
   console.log(currentTarget);
 });
 
+// ------------------------
 // spread operator pour quand on ne sait pas le nb
+// Les valeurs reçues seront stockées sous la forme d’une collection (Array)
 const sum = (...numbers) => {
   return numbers.reduce((p, c) => p + c, 0);
 };
@@ -53,3 +55,13 @@ const sum = (...numbers) => {
 // tableau va être transformé en une liste de paramètres envoyée à la fonction sum()
 const tableau = [42, 17, 19, 1, 2, 3, 1.5];
 console.log(sum(...tableau));
+
+// -------------------------
+// callback function
+// fonction passée en paramètre d'une autre fonction
+// Cette fonction “interne” sera ensuite invoquée par la fonction pour réaliser une action.
+// exemples :
+// - reduce(),
+// - UTILS.avg() dans exo filtre,
+// - addEventListener('typeEvent', callbackFunc)
+// - filter() slide 201
