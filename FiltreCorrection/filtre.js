@@ -200,95 +200,130 @@ const DOM = {
       sortHeaders: document.querySelectorAll("[data-sortfield]"),
     },
   },
+  p: {
+    averagePrice: document.getElementById("averagePrice"),
+  },
 };
 
-// VARIABLES
-const sort = {
-  sortField: null,
-  sortOrder: 1, // -1 DESC 1 ASC
+// FUNCTIONS
+// fonctions réutilisables qui vont calculer qqch
+const UTILS = {
+  normalize: (string) =>
+    string
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, ""),
+  avg: (array, selectorCb) =>
+    array.reduce(
+      (previous, current) => previous + selectorCb(current.prix) / array.length,
+      0
+    ),
+  applySortAndFilters: () => {
+    DATA
+      // destructuring, ajout 2 nvles colonnes & accents retirés via .map()
+      .map((d) => ({
+        ...d,
+        normalizedName: UTILS.normalize(d.nom),
+        normalizedDescription: UTILS.normalize(d.description),
+      }))
+      // pas besoin de filtrer si aucun input indiqué, la 2e condition ne sera jamais exécutée -> !value || (cond)
+      .filter(
+        (d) =>
+          (!filterOptions.search ||
+            d.normalizedName.includes(filterOptions.search) ||
+            d.normalizedDescription.includes(filterOptions.search)) &&
+          (!filterOptions.min || d.prix >= min) &&
+          (!filterOptions.max || d.prix <= max)
+      )
+      .toSorted((a, b) => {
+        switch (sortOptions.type) {
+          case "number":
+            return (
+              (a[sortOptions.sortField] - b[sortOptions.sortField]) *
+              sortOptions.sortOrder
+            );
+          case "string":
+            return (
+              a[sortOptions.sortField].localeCompare(b[sortOptions.sortField]) *
+              sortOptions.sortOrder
+            );
+          default:
+            return 1;
+        }
+      });
+  },
 };
-let articlesToDisplay;
 
-// EVENTS
-DOM.buttons.search.addEventListener("click", () => {
-  const search = DOM.inputs.search.value
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "");
-  const min = DOM.inputs.min.value;
-  const max = DOM.inputs.max.value;
-
-  articlesToDisplay = DATA
-    // destructuring, ajout 2 nvles colonnes & accents retirés via .map()
-    .map((d) => ({
-      ...d,
-      normalizedName: d.nom
-        .toUpperCase()
-        .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, ""),
-      normalizedDescription: d.description
-        .toLocaleUpperCase()
-        .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, ""),
-    }))
-    // pas besoin de filtrer si aucun input indiqué, la 2e condition ne sera jamais exécutée -> !value || (cond)
-    .filter(
-      (d) =>
-        (!search ||
-          d.normalizedName.includes(search) ||
-          d.normalizedDescription.includes(search)) &&
-        (!min || d.prix >= min) &&
-        (!max || d.prix <= max)
-    );
-
-  // afficher les articles
-  displayArticles();
-});
-
-for (let th of DOM.table.articles.sortHeaders) {
-  th.addEventListener("click", () => {
-    sort.sortOrder =
-      sort.sortField !== th.dataset.sortfield
-        ? sort.sortOrder
-        : sort.sortOrder * -1;
-    sort.sortField = th.dataset.sortfield;
-    console.log(sort);
+// fonctions qui vont être liéées aux événements
+const HANDLERS = {
+  onSearch: () => {
+    filterOptions.search = UTILS.normalize(DOM.inputs.search.value);
+    filterOptions.min = DOM.inputs.min.valueAsNumber;
+    filterOptions.max = DOM.inputs.max.valueAsNumber;
+    // afficher les articles
+    applySortAndFilters();
+    RENDER.displayArticles();
+    RENDER.displayAveragePrice();
+  },
+  onSortHeader: (th) => {
+    sortOptions.sortOrder =
+      sortOptions.sortField !== th.dataset.sortfield // dataset : permet de récupérer les metadonnées/attributs custom (data-) // DOM.p.dataset.gender = "Male"
+        ? sortOptions.sortOrder
+        : sortOptions.sortOrder * -1;
+    sortOptions.sortField = th.dataset.sortfield;
+    sortOptions.type = typeof articlesToDisplay[0][sortOptions.sortField];
     // trier
-    if (!articlesToDisplay?.length) return;
-
-    const type = typeof articlesToDisplay[0][sort.sortField];
-
-    articlesToDisplay = articlesToDisplay.toSorted((a, b) => {
-      switch (type) {
-        case "number":
-          return (a[sort.sortField] - b[sort.sortField]) * sort.sortOrder;
-        case "string":
-          return (
-            a[sort.sortField].localeCompare(b[sort.sortField]) * sort.sortOrder
-          );
-      }
-    });
+    // if (!articlesToDisplay?.length) return;
 
     // afficher les articles
-    displayArticles();
-  });
-}
+    articlesToDisplay = UTILS.applySortAndFilters();
+    RENDER.displayArticles();
+  },
+};
 
-// FONCTIONS
-const displayArticles = () => {
-  // vider la table des articles
-  DOM.table.articles.tbody.replaceChildren();
-
-  for (let article of articlesToDisplay) {
+// fonctions qui vont être liées à l'affichage
+const RENDER = {
+  createArticleRow: (article) => {
     const tr = document.createElement("tr");
     const tdNom = document.createElement("td");
     const tdDescription = document.createElement("td");
     const tdPrix = document.createElement("td");
-    DOM.table.articles.tbody.append(tr);
+
     tr.append(tdNom, tdDescription, tdPrix);
 
     tdNom.textContent = article.nom;
     tdDescription.textContent = article.description;
     tdPrix.textContent = article.prix + "€";
-  }
+    return tr;
+  },
+  displayArticles: () => {
+    DOM.table.articles.tbody.replaceChildren();
+    DOM.table.articles.tbody.append(
+      ...articlesToDisplay.map(RENDER.createArticleRow)
+    );
+  },
+  displayAveragePrice: () => {
+    const m = UTILS.avg(articlesToDisplay, (a) => a.prix);
+    DOM.p.averagePrice.textContent = m.toFixed(2) + "€";
+  },
 };
+
+// VARIABLES
+const sortOptions = {
+  sortField: null,
+  sortOrder: 1, // -1 DESC 1 ASC
+  type: null,
+};
+const filterOptions = {
+  search: null,
+  min: null,
+  max: null,
+};
+let articlesToDisplay;
+
+// EVENTS
+DOM.buttons.search.addEventListener("click", HANDLERS.onSearch);
+
+DOM.table.articles.sortHeaders.forEach((th) => {
+  th.addEventListener("click", () => HANDLERS.onSortHeader(th));
+});
