@@ -1,41 +1,80 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
 }
 
 body {
-  font-family: "Open Sans";
-  margin: 1.25rem;
+	font-family: "Open Sans";
+	margin: 1.25rem;
 }
 
 h1 {
-  margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 .select-difficulty {
-  margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 .game-grid {
-  margin: 0 auto;
-  max-width: 800px;
-  display: grid;
-  /* grid-template-rows: repeat(auto-fit, minmax(300px, 1fr); */
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1em;
-  place-content: center;
+	margin: 0 auto;
+	max-width: 800px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 1em;
+	place-content: center;
+}
 
-  .card {
-    background-color: dodgerblue;
-    color: white;
-    padding: 1rem;
-    height: 12.5rem;
-  }
+.card {
+	background-color: dodgerblue;
+	/* border-radius: ;*/
+	color: white;
+	padding: 1rem;
+	height: 12.5rem;
+	perspective: 1000px; /* Pour l'effet 3D */
+	cursor: pointer;
+	position: relative;
+	transform-style: preserve-3d; /* Pour conserver la 3D pendant l'animation */
+	transition: transform 0.6s; /* Durée de l'animation */
+}
+
+.card.flipped {
+	transform: rotateY(180deg);
+}
+
+.card .front,
+.card .back {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	backface-visibility: hidden; /* Cache l'arrière de la carte */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.card .front {
+	background-color: dodgerblue;
+	color: white;
+}
+
+.card .back {
+	background-color: white;
+	border: 1px solid dodgerblue;
+	transform: rotateY(180deg); /* L'arrière est déjà retourné */
+}
+
+.card img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: cover;
 }
 
 .hidden {
-  display: none;
+	display: none;
 }
