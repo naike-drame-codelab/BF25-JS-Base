@@ -1,0 +1,41 @@
+#cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.card {
+  width: 150px;
+  aspect-ratio: 14/20;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 15px 0 #ccc;
+  border-radius: 5px;
+  position: relative;
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+
+  &.show {
+    transform: unset; /* retire rotateY(180deg)*/
+    pointer-events: none; /* empêche de pouvoir recliquer une card déjà retournée*/
+  }
+
+  .front,
+  back {
+    position: absolute; /* car front et back l'un sur l'autre*/
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* cache face cachée*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .back {
+    transform: rotateY(180deg);
+  }
+
+  .front img {
+    width: 80%;
+  }
+}
